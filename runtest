@@ -1,7 +1,7 @@
 #!/bin/bash
 IN="in"
 OUT="out"
-EXPECT="expect"
+EXPECT="exp"
 PROG="./omit"
 # run the test for each test number supplied as an argument
 for index in $@
