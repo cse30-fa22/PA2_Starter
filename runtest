@@ -2,7 +2,7 @@
 IN="in"
 OUT="out"
 EXPECT="exp"
-PROG="./omit"
+PROG="./omit_beta"
 # run the test for each test number supplied as an argument
 for index in $@
 do
