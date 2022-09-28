@@ -1,0 +1,55 @@
+#!/bin/bash
+IN="in"
+OUT="out"
+EXPECT="exp"
+PROG="./omit_beta"
+# run the test for each test number supplied as an argument
+for index in $@
+do
+    # if the test file does not exists, echo a warning then go to the next test
+    if [ ! -f $IN/test$index ]; then
+        echo "Test file $IN/test$index does not exists, skipping"
+        continue
+    fi 
+
+    # if the expected file does not exists, echo a warning then go to the next test
+    if [ ! -f $EXPECT/out$index ]; then
+        echo "Test file $EXPECT/out$index does not exists, skipping"
+        continue
+    fi 
+
+    echo
+    echo "----- Starting test number $index -----"
+
+    # remove any old output files
+    rm -f $OUT/out$index $OUT/err$index
+    echo "Running $PROG < $IN/test$index > $OUT/out$index 2> $OUT/err$index"
+
+    # run the test
+    $PROG < $IN/test$index > $OUT/out$index 2> $OUT/err$index 
+
+    # compare the expected output with the actual output
+    # cmp -s has a return value of 0 if they are the same, otherwise they are different
+    echo "Comparing $EXPECT/out$index to $OUT/out$index"
+    cmp -s $EXPECT/out$index $OUT/out$index
+    
+    # now check the return value of the cmp
+    if [ $? -ne 0 ]; then
+        echo "**** Output on test $index failed ****"
+
+        # check if the output exists, if not the command did not run
+        if [ -s $OUT/out$index ]; then
+            echo "< expected"
+            echo "> your code"
+            echo "differences are:" 
+            diff $EXPECT/out$index $OUT/out$index
+        else
+            echo "Output File is empty: $OUT/out$index"
+        fi
+    else
+        echo "**** Output file test $index passed ****"
+    fi
+    echo "----- Ending   test number $index -----"
+done
+echo
+echo "******* All Done *******"
