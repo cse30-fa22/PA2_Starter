@@ -38,7 +38,7 @@ do
         echo "**** Output on test $index failed ****"
 
         # check if the output exists, if not the command did not run
-        if [ -s $OUT/out$index ]; then
+        if [ -f $OUT/out$index ]; then
             echo "< expected"
             echo "> your code"
             echo "differences are:" 
